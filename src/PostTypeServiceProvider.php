@@ -3,6 +3,8 @@
 namespace NGiraud\PostType;
 
 use Illuminate\Support\ServiceProvider;
+use NGiraud\PostType\Commands\CreatePostType;
+use NGiraud\PostType\Commands\RemovePostType;
 
 class PostTypeServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,6 @@ class PostTypeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
     }
 
     /**
@@ -23,6 +24,15 @@ class PostTypeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+//        $this->app->bind('command.posttype:create', CreatePostType::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CreatePostType::class,
+                RemovePostType::class,
+            ]);
+        }
+
+//        $this->app->singleton(ConsoleOutput::class);
     }
 }
