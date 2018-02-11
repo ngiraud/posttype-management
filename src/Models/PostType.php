@@ -10,6 +10,7 @@ namespace NGiraud\PostType\Models;
 
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,17 @@ abstract class PostType extends Model implements PostTypeInterface
             if (Auth::check()) {
                 $item->user_id = Auth::id();
             }
+
+            $item->published_at = null;
+            if ($item->status == static::STATUS_PUBLISHED) {
+                $item->published_at = Carbon::now();
+            }
+        });
+
+        static::addGlobalScope('published', function ($builder) {
+            $builder
+                ->where('status', static::STATUS_PUBLISHED)
+                ->whereNotNull('published_at');
         });
     }
 
@@ -64,7 +76,7 @@ abstract class PostType extends Model implements PostTypeInterface
 
     public function ruleStatus()
     {
-        return 'in:' . implode(',', [self::STATUS_DRAFT, self::STATUS_PUBLISHED]);
+        return 'in:' . implode(',', [static::STATUS_DRAFT, static::STATUS_PUBLISHED]);
     }
 
     public function owner()
