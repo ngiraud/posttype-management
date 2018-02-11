@@ -120,3 +120,4 @@ class CreatePostType extends AbstractPostType
         $this->info('Factory ' . $factory_name . ' created successfully.');
     }
 }
+
