@@ -35,7 +35,11 @@ class {{class}}Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $this->validate($request, (new {{class}})->rules());
+
+        {{model_variable}} = {{class}}::create($validatedData);
+
+//        return redirect(route('POSTROUTE', {{model_variable}}))->with('success', "My {{{model_variable}}} has been added");
     }
 
     /**
@@ -69,7 +73,11 @@ class {{class}}Controller extends Controller
      */
     public function update(Request $request, {{class}} {{model_variable}})
     {
-        //
+        $validatedData = $this->validate($request, {{model_variable}}->rules());
+
+        {{model_variable}} = {{class}}::update($validatedData);
+
+//        return redirect(route('POSTROUTE', $post))->with('success', "My {{{model_variable}}} has been updated");
     }
 
     /**
@@ -80,6 +88,8 @@ class {{class}}Controller extends Controller
      */
     public function destroy({{class}} {{model_variable}})
     {
-        //
+        {{model_variable}}->delete();
+
+//        return response()->json('My {{{model_variable}}} has been deleted');
     }
 }
