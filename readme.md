@@ -61,6 +61,57 @@ php artisan posttype:remove MYPOSTTYPE
 
 BE CAREFUL : The associated route will not be removed!
 
+### Columns
+The default columns added to a post type are these ones :
+
+```php
+$table->increments('id');
+$table->unsignedInteger('user_id');
+$table->unsignedInteger('parent_id')->nullable();
+$table->string('name');
+$table->string('slug');
+$table->unsignedTinyInteger('status');
+$table->text('excerpt')->nullable();
+$table->longText('content')->nullable();
+$table->timestamp('published_at')->nullable();
+$table->timestamps();
+$table->softDeletes();
+```
+
+As you can see, the package uses softDeletes columns.
+
+The user_id column is automatically saved in the model boot event saving with the authenticated user id.
+
+The published_at column is automatically saved as well as the user_id if the status is published.
+
+## Default comportment
+Post types queries have a global scope to only fetch published data.
+
+A relationship exists between a user and the posttype called owner().
+Two relationships exist between a posttype parent and a posttype children :
+* The first one is parent();
+* The second one is children();
+
+A rules public function exists, you can override it if you want.
+
+To add another status you just have to add a constant in the model called STATUS_MYNEWSTATUS :
+
+A ruleStatus public function exists, this is the rule for the status column, you will have to override it to add you new status.
+
+```php
+class Test extends PostType
+{
+    const STATUS_INCOMING = 3;
+
+    public function ruleStatus()
+    {
+        return 'in:' . implode(',', [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_INCOMING]);
+    }
+}
+```
+
+@TODO : automatically get the statuses to implement the method
+
 ## Credits
 
 * Nicolas Giraud
