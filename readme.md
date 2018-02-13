@@ -112,6 +112,22 @@ class Test extends PostType
 
 @TODO : automatically get the statuses to implement the method
 
+## Note on testing
+
+To test the package, change the namespace used for User in PostType abstract class.
+
+```php
+=> comment  //use App\User;
+=> add      use NGiraud\PostType\Test\User;
+
+abstract class PostType extends Model implements PostTypeInterface
+{
+    ...
+}
+```
+
+I know this is not the right way to go, but I don't know how to do it an other way.
+
 ## Credits
 
 * Nicolas Giraud

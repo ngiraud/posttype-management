@@ -1,15 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nico
- * Date: 11/02/2018
- * Time: 09:26
- */
 
 namespace NGiraud\PostType\Models;
 
-
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use NGiraud\PostType\Interfaces\PostType as PostTypeInterface;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use App\User;
 
 abstract class PostType extends Model implements PostTypeInterface
 {
