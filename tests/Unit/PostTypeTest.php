@@ -13,6 +13,30 @@ class PostTypeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    function a_post_type_has_a_published_status()
+    {
+        $value_published = !defined('NGiraud\PostType\Test\Post::STATUS_PUBLISHED') ? 0 : Post::STATUS_PUBLISHED;
+
+        $this->assertNotEmpty($value_published);
+    }
+
+    /** @test */
+    function a_post_type_has_statuses()
+    {
+        $post = factory(Post::class)->create();
+
+        $this->assertNotEmpty($post->statuses());
+    }
+
+    /** @test */
+    function a_post_type_has_a_rules_method()
+    {
+        $post = factory(Post::class)->create();
+
+        $this->assertNotEmpty($post->rules());
+    }
+
+    /** @test */
     function a_post_has_an_owner_and_is_the_auth_one()
     {
         $user = factory(User::class)->create();

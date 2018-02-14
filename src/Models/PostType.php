@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use NGiraud\PostType\Interfaces\PostType as PostTypeInterface;
+use ReflectionClass;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use App\User;
@@ -63,13 +65,25 @@ abstract class PostType extends Model implements PostTypeInterface
             'excerpt' => 'nullable',
             'published_at' => 'nullable|date',
             'parent_id' => 'nullable|integer',
-            'status' => $this->ruleStatus()
+            'status' => [Rule::in($this->statuses())]
         ];
     }
 
-    public function ruleStatus()
+    public function statuses()
     {
-        return 'in:' . implode(',', [static::STATUS_DRAFT, static::STATUS_PUBLISHED]);
+        $oClass = new ReflectionClass(static::class);
+        $constants = $oClass->getConstants();
+
+        $statuses = array_filter($constants, function($const_key) {
+            return strpos($const_key, 'STATUS_') !== false;
+        }, ARRAY_FILTER_USE_KEY);
+
+        if(empty($statuses)) {
+            throw new \Exception("No status specified");
+        }
+
+        return $statuses;
+//        return 'in:' . implode(',', array_values($statuses));
     }
 
     public function owner()
