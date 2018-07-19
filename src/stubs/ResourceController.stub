@@ -39,7 +39,12 @@ class {{class}}Controller extends Controller
 
         {{model_variable}} = {{class}}::create($validatedData);
 
-//        return redirect(route('POSTROUTE', {{model_variable}}))->with('success', "My {{{model_variable}}} has been added");
+        if (request()->wantsJson()) {
+            return response({{model_variable}}, 201);
+        }
+
+        return redirect(route('post.edit', {{model_variable}}))
+            ->with('flash', 'Your {{model_variable}} has been created!');
     }
 
     /**
@@ -75,21 +80,33 @@ class {{class}}Controller extends Controller
     {
         $validatedData = $this->validate($request, {{model_variable}}->rules());
 
-        {{model_variable}} = {{class}}::update($validatedData);
+        {{model_variable}}->update($validatedData);
 
-//        return redirect(route('POSTROUTE', $post))->with('success', "My {{{model_variable}}} has been updated");
+        if (request()->wantsJson()) {
+            return response({{model_variable}}, 201);
+        }
+
+        return redirect(route('post.edit', {{model_variable}}))
+            ->with('flash', 'Your {{model_variable}} has been modified!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\{{class}}  {{model_variable}}
+     * @param  \App\{{class}} {{model_variable}}
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy({{class}} {{model_variable}})
     {
         {{model_variable}}->delete();
 
-//        return response()->json('My {{{model_variable}}} has been deleted');
+        session()->flash('message', "Your post {{{model_variable}}->name} has been removed.");
+
+        if (request()->expectsJson()) {
+            return response(['status' => '{{class}} removed']);
+        }
+
+        return back();
     }
 }
