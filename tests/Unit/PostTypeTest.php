@@ -13,7 +13,7 @@ class PostTypeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_post_type_has_a_published_status()
+    function it_has_a_published_status()
     {
         $value_published = !defined('NGiraud\PostType\Test\Post::STATUS_PUBLISHED') ? 0 : Post::STATUS_PUBLISHED;
 
@@ -21,7 +21,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_type_has_statuses()
+    function it_has_statuses()
     {
         $post = factory(Post::class)->create();
 
@@ -29,7 +29,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_type_has_a_rules_method()
+    function it_has_a_rules_method()
     {
         $post = factory(Post::class)->create();
 
@@ -37,7 +37,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_an_owner_and_is_the_auth_one()
+    function it_has_an_owner_and_is_the_auth_one()
     {
         $user = factory(User::class)->create();
         $this->signIn($user);
@@ -48,7 +48,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_a_slug()
+    function it_has_a_slug()
     {
         $post_type = factory(Post::class)->create();
 
@@ -56,7 +56,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_a_parent()
+    function it_has_a_parent()
     {
         $post_type_parent = factory(Post::class)->create();
         $post_type = factory(Post::class)->create(['parent_id' => $post_type_parent->id]);
@@ -65,7 +65,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_children()
+    function it_has_children()
     {
         $post_type_parent = factory(Post::class)->create();
         factory(Post::class)->create(['parent_id' => $post_type_parent->id]);
@@ -75,7 +75,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_a_published_date_when_published()
+    function it_has_a_published_date_when_published()
     {
         $post = factory(Post::class)->create(['status' => PostType::STATUS_PUBLISHED]);
 
@@ -83,7 +83,7 @@ class PostTypeTest extends TestCase
     }
 
     /** @test */
-    function a_post_has_not_a_published_date_when_draft()
+    function it_has_not_a_published_date_when_draft()
     {
         $post = factory(Post::class)->create(['status' => PostType::STATUS_DRAFT]);
 
