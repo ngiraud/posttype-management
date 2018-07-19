@@ -18,7 +18,7 @@ composer require ngiraud/posttype-management
 
 ### Step 2
 
-In Laravel 5.5 the service provider will automatically get registered. In older versions of the framework just add the service provider in config/app.php file:
+In Laravel 5.5 the service provider will automatically get registered. In older versions just add the service provider in the config/app.php file:
 
 ```php
 'providers' => [
@@ -39,14 +39,14 @@ It will also add a route in the routes/web.php file.
 php artisan posttype:create MYPOSTTYPE [-m|--migrate] [--ctrl-folder=MYFOLDER]
 ```
 
-If you want to specify a custom path to your Controller directory inside the App/Http, you can use :
+If you want to specify a custom path to your Controller directory inside the App/Http, you can use:
 ```bash
 php artisan posttype:create MYPOSTTYPE --ctrl-folder=MYFOLDER
 ```
 
 The route will be namespaced with the folder name.
 
-If you want to migrate the generate migration instantly :
+If you want to migrate the generated migration instantly:
 ```bash
 php artisan posttype:create MYPOSTTYPE -m
 ```
@@ -59,10 +59,10 @@ This command will remove the model, resource controller, migration and factory f
 php artisan posttype:remove MYPOSTTYPE
 ```
 
-BE CAREFUL : The associated route will not be removed!
+!!! The associated route will not be removed !!!
 
 ### Columns
-The default columns added to a post type are these ones :
+The default columns added to a post type are:
 
 ```php
 $table->increments('id');
@@ -78,7 +78,7 @@ $table->timestamps();
 $table->softDeletes();
 ```
 
-As you can see, the package uses softDeletes columns.
+The package uses softDeletes columns.
 
 The user_id column is automatically saved in the model boot event saving with the authenticated user id.
 
@@ -92,28 +92,10 @@ Two relationships exist between a posttype parent and a posttype children :
 * The first one is parent();
 * The second one is children();
 
-A rules public function exists, you can override it if you want.
+A public function "rules" exists, you can override it if you want.
 
 To add another status you just have to add a constant in the model called STATUS_MYNEWSTATUS :
-
-A ruleStatus public function exists, this is the rule for the status column, you will have to override it to add you new status.
-
-```php
-class Test extends PostType
-{
-    const STATUS_INCOMING = 3;
-
-    public function ruleStatus()
-    {
-        return 'in:' . implode(',', [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_INCOMING]);
-    }
-}
-```
-
-@TODO : automatically get the statuses to implement the method
 
 ## Credits
 
 * Nicolas Giraud
-
-This is my first real package, so please be indulgent with me :)
