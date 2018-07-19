@@ -2,6 +2,7 @@
 
 namespace NGiraud\PostType\Models;
 
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,6 @@ use NGiraud\PostType\Interfaces\PostType as PostTypeInterface;
 use ReflectionClass;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use App\User;
 
 abstract class PostType extends Model implements PostTypeInterface
 {
@@ -60,11 +60,11 @@ abstract class PostType extends Model implements PostTypeInterface
     public function rules()
     {
         return [
-            'name' => 'required|min:2|max:255',
+            'name' => ['required', 'min:2', 'min:255'],
             'content' => 'nullable',
             'excerpt' => 'nullable',
-            'published_at' => 'nullable|date',
-            'parent_id' => 'nullable|integer',
+            'published_at' => ['nullable', 'date'],
+            'parent_id' => ['nullable', 'integer'],
             'status' => [Rule::in($this->statuses())]
         ];
     }
@@ -74,11 +74,11 @@ abstract class PostType extends Model implements PostTypeInterface
         $oClass = new ReflectionClass(static::class);
         $constants = $oClass->getConstants();
 
-        $statuses = array_filter($constants, function($const_key) {
+        $statuses = array_filter($constants, function ($const_key) {
             return strpos($const_key, 'STATUS_') !== false;
         }, ARRAY_FILTER_USE_KEY);
 
-        if(empty($statuses)) {
+        if (empty($statuses)) {
             throw new \Exception("No status specified");
         }
 
