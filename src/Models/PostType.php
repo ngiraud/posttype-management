@@ -64,7 +64,7 @@ abstract class PostType extends Model implements PostTypeInterface
             'content' => 'nullable',
             'excerpt' => 'nullable',
             'published_at' => ['nullable', 'date'],
-            'parent_id' => ['nullable', 'integer'],
+            'parent_id' => ['nullable', Rule::exists(static::getTable(), 'parent_id')],
             'status' => [Rule::in($this->statuses())]
         ];
     }
