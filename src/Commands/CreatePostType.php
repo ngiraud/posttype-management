@@ -31,6 +31,7 @@ class CreatePostType extends AbstractPostType
         $this->createMigration();
         $this->createResourceController();
         $this->createFactory();
+        $this->createTests();
 
         if ($this->option('migrate') == true) {
             $this->call('migrate', ['--no-interaction' => true]);
@@ -118,5 +119,23 @@ class CreatePostType extends AbstractPostType
 
         $this->files->put(database_path() . '/factories/' . $factory_name . '.php', $stub);
         $this->info('Factory ' . $factory_name . ' created successfully.');
+    }
+
+    protected function createTests()
+    {
+        $table_name = $this->getTableName();
+        $model_name = $this->getModelName();
+
+        $stubDirectory = $this->getStubPath() . '/Tests';
+
+        $stubCreate = $this->files->get($stubDirectory . '/CreatePostTypeTest.stub');
+        $stubCreate = str_replace(
+            ['{{class}}', '{{table}}'],
+            [$model_name, $table_name],
+            $stubCreate
+        );
+
+        $this->files->put(base_path() . '/tests/Feature/' . $model_name . '/Create' . $model_name . 'Test.php', $stubCreate);
+        $this->info('Test Create' . $model_name . 'Test created successfully.');
     }
 }

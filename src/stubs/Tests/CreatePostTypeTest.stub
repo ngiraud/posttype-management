@@ -1,0 +1,102 @@
+<?php
+
+namespace Tests\Feature\{{class}};
+
+use App\{{class}};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class Create{{class}}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    protected $table = '{{table}}';
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->signIn('admin');
+
+//        'parent_id' => 'nullable|integer',
+    }
+
+    /** @test */
+    function a_name_is_required()
+    {
+        $posttype = factory({{class}}::class)->make(['name' => '']);
+
+        $response = $this->postJson(route('post.store'), $posttype->toArray());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+    /** @test */
+    function a_name_has_a_minimum_length_of_2()
+    {
+        $posttype = factory({{class}}::class)->make(['name' => 'a']);
+
+        $response = $this->postJson(route('post.store'), $posttype->toArray());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+    /** @test */
+    function a_name_has_a_maximum_length_of_255()
+    {
+        $posttype = factory({{class}}::class)->make(['name' => str_random(260)]);
+
+        $response = $this->postJson(route('post.store'), $posttype->toArray());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+    /** @test */
+    function a_published_date_has_to_be_a_date()
+    {
+        $posttype = factory({{class}}::class)->make();
+
+        $response = $this->postJson(route('post.store'), array_merge($posttype->toArray(), ['published_at' => 'not-a-date']));
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('published_at');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+    /** @test */
+    function a_parent_id_has_to_be_in_posttype_table()
+    {
+        $posttype = factory({{class}}::class)->make(['parent_id' => 1000]);
+
+        $response = $this->postJson(route('post.store'), $posttype->toArray());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('parent_id');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+    /** @test */
+    function a_status_has_to_be_in_posttype_statuses()
+    {
+        $posttype = factory({{class}}::class)->make(['status' => 'not-a-status']);
+
+        $response = $this->postJson(route('post.store'), $posttype->toArray());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('status');
+
+        $this->assertDatabaseMissing($this->table, $posttype->toArray());
+    }
+
+}
